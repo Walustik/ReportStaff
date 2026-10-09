@@ -1,0 +1,27 @@
+language: en_US
+report:
+  cooldown-seconds: 30
+  title:
+    category: "&8Report &7%target%"
+    staff-panel: "&8Active Reports"
+discord:
+  webhook-url: ""
+messages:
+  prefix: "&8[&cReportStaff&8]&7 "
+  no-player: "&cPlayer not found."
+  self-report: "&cYou cannot report yourself."
+  cooldown: "&cYou must wait before filing another report."
+  custom-reason: "&ePlease type your custom reason in chat."
+  report-created: "&aYour report has been submitted to staff."
+  staff-alert: "&c{reporter} reported {target} for {reason}"
+  staff-panel-title: "&8Active Reports"
+  item:
+    reporter: "&7Reporter: &f{reporter}"
+    target: "&7Target: &f{target}"
+    reason: "&7Reason: &f{reason}"
+    timestamp: "&7Date: &f{date}"
+  reload-success: "&aConfiguration reloaded successfully."
+  invalid-uuid: "&cInvalid report ID."
+  resolved: "&aReport marked as resolved."
+  tp: "&aTeleporting to the reported player..."
+  spectator: "&aYou are now spectating the reported player."

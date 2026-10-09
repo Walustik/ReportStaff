@@ -1,0 +1,34 @@
+name: ReportStaff
+version: 1.0.0
+main: com.walustik.reportstaff.ReportStaffPlugin
+api-version: '1.20'
+folia-supported: true
+authors: [Walustik]
+commands:
+  report:
+    description: Open report category GUI
+    usage: /report <player>
+    aliases: [rep]
+    permission: reportstaff.report
+  reports:
+    description: Open active reports panel
+    usage: /reports
+    aliases: [rlist]
+    permission: reportstaff.reports
+  rsreload:
+    description: Reload plugin configuration
+    usage: /rsreload
+    permission: reportstaff.reload
+permissions:
+  reportstaff.report:
+    description: Allows creating reports
+    default: true
+  reportstaff.reports:
+    description: Allows viewing active reports
+    default: op
+  reportstaff.reload:
+    description: Allows reloading the plugin
+    default: op
+  reportstaff.notify:
+    description: Allows receiving report alerts
+    default: op
