@@ -1,11 +1,44 @@
+# ReportStaff Configuration File v1.1
+
+# Language selection (en_US / tr_TR)
 language: en_US
+
+# Report settings
 report:
   cooldown-seconds: 30
   title:
     category: "&8Report &7%target%"
     staff-panel: "&8Active Reports"
+
+# Database Configuration
+database:
+  # Type: SQLITE or MYSQL
+  type: SQLITE
+  
+  # SQLite settings (used when type is SQLITE)
+  sqlite:
+    # Relative path from plugin folder
+    file-path: "reports.db"
+  
+  # MySQL settings (used when type is MYSQL)
+  mysql:
+    host: localhost
+    port: 3306
+    database: reportstaff
+    username: root
+    password: "password"
+    ssl: false
+    max-pool-size: 10
+    min-idle-connections: 2
+    connection-timeout-ms: 30000
+    idle-timeout-ms: 600000
+
+# Discord Webhook Configuration
 discord:
   webhook-url: ""
+  enabled: false
+
+# Messages
 messages:
   prefix: "&8[&cReportStaff&8]&7 "
   no-player: "&cPlayer not found."
@@ -25,3 +58,5 @@ messages:
   resolved: "&aReport marked as resolved."
   tp: "&aTeleporting to the reported player..."
   spectator: "&aYou are now spectating the reported player."
+  database-error: "&cA database error occurred. Please try again later."
+  database-connected: "&aSuccessfully connected to database."

@@ -19,22 +19,40 @@ import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * GUI for displaying active reports to staff members.
+ * Updates asynchronously when reports are added/removed.
+ *
+ * @author Walustik
+ * @version 1.1.0
+ */
 public final class StaffPanelGUI {
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.getDefault());
 
+    /**
+     * Opens the staff reports panel for a player.
+     */
     public static void open(Player player, ReportStaffPlugin plugin) {
         Inventory inventory = Bukkit.createInventory(null, 54, ColorUtils.colorize(plugin.getLanguageManager().getMessage("report-panel.title")));
 
-        List<Report> reports = plugin.getReportManager().getReports();
-        for (int i = 0; i < reports.size() && i < 54; i++) {
-            Report report = reports.get(i);
-            inventory.setItem(i, createReportItem(report, plugin));
-        }
-
-        player.openInventory(inventory);
+        // Fetch reports from database asynchronously
+        plugin.getReportManager().getReports().thenAccept(reports -> {
+            for (int i = 0; i < reports.size() && i < 54; i++) {
+                Report report = reports.get(i);
+                inventory.setItem(i, createReportItem(report, plugin));
+            }
+            player.openInventory(inventory);
+        }).exceptionally(e -> {
+            player.sendMessage(ColorUtils.colorize(plugin.getLanguageManager().getMessage("prefix") + plugin.getLanguageManager().getMessage("database-error")));
+            plugin.getLogger().warning("Failed to load reports: " + e.getMessage());
+            return null;
+        });
     }
 
+    /**
+     * Creates an inventory item representing a report.
+     */
     private static ItemStack createReportItem(Report report, ReportStaffPlugin plugin) {
         ItemStack head = new ItemStack(Material.PLAYER_HEAD);
         ItemMeta meta = head.getItemMeta();
@@ -53,12 +71,14 @@ public final class StaffPanelGUI {
         lore.add(ColorUtils.colorize(plugin.getLanguageManager().getMessage("report-panel.target").replace("{target}", target.getName())));
         lore.add(ColorUtils.colorize(plugin.getLanguageManager().getMessage("report-panel.reason").replace("{reason}", report.reason())));
         lore.add(ColorUtils.colorize(plugin.getLanguageManager().getMessage("report-panel.date").replace("{date}", DATE_FORMAT.format(new Date(report.timestamp())))));
+        lore.add(ColorUtils.colorize("&7Age: &f" + report.getFormattedAge()));
+        lore.add("");
         lore.add(ColorUtils.colorize("&7Left Click: Teleport"));
         lore.add(ColorUtils.colorize("&7Right Click: Spectate"));
         lore.add(ColorUtils.colorize("&7Shift + Left: Resolve"));
 
         meta.setLore(lore);
-        meta.getPersistentDataContainer().set(plugin.getReportIdKey(), org.bukkit.persistence.PersistentDataType.STRING, report.id().toString());
+        meta.getPersistentDataContainer().set(plugin.getReportIdKey(), PersistentDataType.STRING, report.id().toString());
         head.setItemMeta(meta);
         return head;
     }
